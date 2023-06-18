@@ -1,0 +1,64 @@
+﻿@page "/article/{title}"
+@using System.Text
+@inject IArticleService ArticleService
+
+<PageTitle>Atricle Content</PageTitle>
+@if(ArticleService.Article != null)
+{   
+    <img class="rounded main-img-article border border-5" 
+         src=@ArticleService.Article.ImagePath />
+
+    <div class="title"><span>@ArticleService.Article.Title</span></div>
+    <div>
+        <div class="author">@($"Created by {ArticleService.Article.CreatedById} {ArticleService.Article.CreatedDate}")</div>
+        <div class="tags">
+            <p> 
+                @((string.IsNullOrEmpty(@FullTagsString)) ? "Loading": @FullTagsString)
+            </p>                      
+        </div>
+    </div>
+    
+    @((MarkupString)MyMarkup)
+}
+else
+{
+    <p>Loading</p>
+}
+
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+    public string FullTagsString { get; set; }
+    public string Name { get; set; }
+    public string Text { get; set; }
+    public int PropertyId { get; set; }
+    public string MyMarkup { get; set; } = "loading";
+    async protected override Task OnParametersSetAsync()
+    {
+        await ArticleService.GetArticleByTitleAsync(Title);
+        await SetFullTagsString();
+        await SetMarkupString();
+    }
+
+    async private Task SetMarkupString()
+    {
+        MyMarkup = ArticleService.Article.Text;
+    }
+    async private Task SetFullTagsString()
+    {
+        StringBuilder sb = new StringBuilder("Tags: ");
+        for (int i = 0; i < ArticleService.Article.Tags.Count; i++)
+        {
+            if(i == ArticleService.Article.Tags.Count - 1)
+            {
+                sb.Append(ArticleService.Article.Tags[i].Name + ".");
+            }
+            else
+            {
+                sb.Append(ArticleService.Article.Tags[i].Name + ", ");
+            }
+        }
+        FullTagsString = sb.ToString();
+    }
+}

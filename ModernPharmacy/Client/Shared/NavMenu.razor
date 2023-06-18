@@ -1,0 +1,75 @@
+﻿@inject IArticleService ArticleService
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        @*#CFCFCF*@
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi" aria-hidden="true"><img class="img-icon-sidebar" src="icons/loupe.png"/></span> <div class="text-sidebar">Search</div>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi" aria-hidden="true"><img src="icons/open-book.png"/></span>  <div class="text-sidebar">Knowledge</div>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi" aria-hidden="true"><img src="icons/pharmacy.png"/></span>  <div class="text-sidebar">Pharmacy</div>
+            </NavLink>
+        </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link">
+                <span class="oi" aria-hidden="true"><img src="icons/open-book.png"/></span>  <div class="nav-link" 
+                @onclick=@(isActive ? this.Hide : this.Show) type="button" data-toggle="dropdown" 
+                aria-haspopup="true" aria-expanded="false">Knowledge</div> 
+            </NavLink>
+                  
+            @if (isActive && ArticleService.ArticleTitlesAndPaths != null && ArticleService.ArticleTitlesAndPaths.Count > 0)
+            {
+                foreach (var item in ArticleService.ArticleTitlesAndPaths)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="@($"article/{item.Item2}")"> 
+                            <div class="text-sidebar">@item.Item1</div>
+                        </NavLink>
+                    </div>
+                }               
+            }        
+        </div>    
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi" aria-hidden="true"><img src="icons/pharmacy.png"/></span>  <div class="text-sidebar">Pharmacy</div>
+            </NavLink>
+        </div>       
+    </nav>
+</div>
+
+@code {
+    private bool isActive = false;
+
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void Show()
+    {
+        isActive = true;
+    }
+    private void Hide()
+    {
+        isActive = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ArticleService.GetOnlyArticleTitlesAsync();
+    }
+}

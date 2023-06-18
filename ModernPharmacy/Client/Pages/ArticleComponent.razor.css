@@ -1,0 +1,26 @@
+﻿.main-img-article {
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    border-color: cadetblue;
+}
+
+.title {
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size:60px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.text-container {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.author {
+
+}
