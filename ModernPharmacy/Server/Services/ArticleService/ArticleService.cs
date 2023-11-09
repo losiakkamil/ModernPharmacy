@@ -15,8 +15,7 @@ namespace ModernPharmacy.Server.Services.ArticleService
         {
             var response = new ServiceResponse<List<Article>>
             {
-                Data = await _dataContext.Articles
-                
+                Data = await _dataContext.Articles                
                 .ToListAsync()
             };
 
